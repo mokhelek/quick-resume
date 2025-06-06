@@ -111,6 +111,21 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
             ))}
           </View>
 
+          {data.qualifications.length > 0 && (
+            <View style={styles.section}>
+              <Text style={styles.title}>Qualifications</Text>
+              {data.qualifications.map((qual) => (
+                <View key={qual.id} style={{ marginBottom: 10 }}>
+                  <View style={styles.row}>
+                    <Text style={styles.subtitle}>{qual.name}</Text>
+                    <Text style={styles.text}>{qual.date}</Text>
+                  </View>
+                  <Text style={styles.text}>{qual.issuer}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+
           <View style={styles.section}>
             <Text style={styles.title}>Skills</Text>
             <Text style={styles.text}>{data.skills.join(', ')}</Text>

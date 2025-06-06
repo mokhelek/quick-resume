@@ -16,6 +16,13 @@ export interface EducationItem {
   endDate: string;
 }
 
+export interface QualificationItem {
+  id: number;
+  name: string;
+  issuer: string;
+  date: string;
+}
+
 export interface PersonalInfo {
   photo: string | null;
   name: string;
@@ -32,5 +39,6 @@ export interface ResumeData {
   personal: PersonalInfo;
   experience: ExperienceItem[];
   education: EducationItem[];
+  qualifications: QualificationItem[];
   skills: string[];
 }

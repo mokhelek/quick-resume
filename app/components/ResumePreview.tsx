@@ -72,6 +72,21 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
             </div>
           </div>
 
+          {data.qualifications.length > 0 && (
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-800 mb-2 border-b border-gray-200 pb-1">Qualifications</h2>
+              {data.qualifications.map((qual, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex justify-between">
+                    <h3 className="font-semibold text-gray-800">{qual.name}</h3>
+                    <p className="text-gray-500 text-sm">{qual.date}</p>
+                  </div>
+                  <p className="text-gray-600 text-sm">{qual.issuer}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="col-span-1">
             <div className="mb-6">
               <h2 className="text-xl font-bold text-gray-800 mb-2 border-b border-gray-200 pb-1">Contact</h2>

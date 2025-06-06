@@ -4,11 +4,11 @@ import { PDFDownloadLink } from '@react-pdf/renderer';
 import { SparklesIcon, ArrowDownTrayIcon, EyeIcon, WrenchIcon, ShieldCheckIcon, DocumentCheckIcon } from '@heroicons/react/24/outline';
 import { ResumeTemplate } from '../components/ResumeTemplate';
 import ResumePreview from '../components/ResumePreview';
-import { ResumeData, ExperienceItem, EducationItem } from '../types/resume';  
-
+import { ResumeData, ExperienceItem, EducationItem } from '../types/resume';
+import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 export default function ResumeBuilder() {
-  const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'skills'>('personal');
+  const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'qualifications' | 'skills'>('personal');
   const [selectedTemplate, setSelectedTemplate] = useState<number>(1);
   const [showTemplateSelector, setShowTemplateSelector] = useState<boolean>(false);
   const [resumeData, setResumeData] = useState<ResumeData>({
@@ -39,9 +39,62 @@ export default function ResumeBuilder() {
       startDate: '2016',
       endDate: '2020'
     }],
+    qualifications: [{
+      id: 1,
+      name: 'AWS Certified Developer',
+      issuer: 'Amazon Web Services',
+      date: '2021'
+    }],
     skills: ['JavaScript', 'React', 'TypeScript', 'Node.js']
   });
 
+
+  // Add these helper functions
+  const handleArrayChange = <T extends {}>(
+    array: T[],
+    index: number,
+    field: keyof T,
+    value: any
+  ): T[] => {
+    return array.map((item, i) =>
+      i === index ? { ...item, [field]: value } : item
+    );
+  };
+
+  const handleAddItem = <T extends {}>(array: T[], newItem: T): T[] => {
+    return [...array, newItem];
+  };
+
+  const handleRemoveItem = <T extends {}>(array: T[], index: number): T[] => {
+    return array.filter((_, i) => i !== index);
+  };
+
+  const handleSkillChange = (index: number, value: string) => {
+    setResumeData(prev => {
+      const updatedSkills = [...prev.skills];
+      updatedSkills[index] = value;
+      return {
+        ...prev,
+        skills: updatedSkills
+      };
+    });
+  };
+
+  const handleAddSkill = () => {
+    setResumeData(prev => ({
+      ...prev,
+      skills: [...prev.skills, '']
+    }));
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    setResumeData(prev => ({
+      ...prev,
+      skills: handleRemoveItem(prev.skills, index)
+    }));
+  };
+
+  // Update your tabs to include qualifications
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleInputChange = (section: keyof ResumeData, field: string, value: string) => {
@@ -104,6 +157,11 @@ export default function ResumeBuilder() {
     }
   };
 
+
+
+
+
+
   const analyzeResume = () => {
     alert('Analyzing your resume with AI...');
   };
@@ -119,15 +177,15 @@ export default function ResumeBuilder() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">Resume Builder</h1>
           <div className="flex space-x-3">
-            <button 
+            <button
               onClick={() => setShowTemplateSelector(true)}
               className="flex items-center px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-gray-700"
             >
               <EyeIcon className="h-5 w-5 mr-2" />
               Templates
             </button>
-            <PDFDownloadLink 
-              document={<ResumeTemplate data={resumeData} template={selectedTemplate} />} 
+            <PDFDownloadLink
+              document={<ResumeTemplate data={resumeData} template={selectedTemplate} />}
               fileName="resume.pdf"
               className="flex items-center px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-colors shadow-md"
             >
@@ -144,18 +202,17 @@ export default function ResumeBuilder() {
               <h2 className="text-xl font-bold mb-4">Choose a Template</h2>
               <div className="grid grid-cols-3 gap-4">
                 {[1, 2, 3, 4, 5, 6].map((template) => (
-                  <div 
-                    key={template} 
-                    className={`border-2 rounded-lg cursor-pointer transition-all ${
-                      selectedTemplate === template ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                  <div
+                    key={template}
+                    className={`border-2 rounded-lg cursor-pointer transition-all ${selectedTemplate === template ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-gray-300'
+                      }`}
                     onClick={() => {
                       setSelectedTemplate(template);
                       setShowTemplateSelector(false);
                     }}
                   >
-                    <img 
-                      src={`/templates/template-${template}.jpg`} 
+                    <img
+                      src={`/templates/template-${template}.jpg`}
                       alt={`Template ${template}`}
                       className="w-full h-auto"
                     />
@@ -165,7 +222,7 @@ export default function ResumeBuilder() {
                   </div>
                 ))}
               </div>
-              <button 
+              <button
                 onClick={() => setShowTemplateSelector(false)}
                 className="mt-4 px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg w-full"
               >
@@ -177,14 +234,13 @@ export default function ResumeBuilder() {
 
         {/* Navigation Tabs */}
         <div className="flex border-b mb-6">
-          {(['personal', 'experience', 'education', 'skills'] as const).map((tab) => (
+          {(['personal', 'experience', 'education', 'skills', 'qualifications'] as const).map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 font-medium transition-colors ${
-                activeTab === tab 
-                  ? 'text-indigo-600 border-b-2 border-indigo-600' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
+              className={`px-4 py-2 font-medium transition-colors ${activeTab === tab
+                ? 'text-indigo-600 border-b-2 border-indigo-600'
+                : 'text-gray-500 hover:text-gray-700'
+                }`}
               onClick={() => setActiveTab(tab)}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -192,12 +248,14 @@ export default function ResumeBuilder() {
           ))}
         </div>
 
+
+
         {/* Form Sections */}
         <div className="space-y-8">
           {activeTab === 'personal' && (
             <div className="space-y-6">
               <div className="flex items-center space-x-6">
-                <div 
+                <div
                   className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-200 cursor-pointer relative"
                   onClick={triggerFileInput}
                 >
@@ -209,8 +267,8 @@ export default function ResumeBuilder() {
                     </div>
                   )}
                 </div>
-                <input 
-                  type="file" 
+                <input
+                  type="file"
                   ref={fileInputRef}
                   onChange={handlePhotoUpload}
                   className="hidden"
@@ -312,14 +370,331 @@ export default function ResumeBuilder() {
             </div>
           )}
 
-          {/* Similar structure for other tabs */}
+          {activeTab === 'experience' && (
+            <div className="space-y-6">
+              {resumeData.experience.map((exp, index) => (
+                <div key={exp.id} className="p-4 border border-gray-200 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-medium">Experience #{index + 1}</h3>
+                    <button
+                      onClick={() => setResumeData(prev => ({
+                        ...prev,
+                        experience: handleRemoveItem(prev.experience, index)
+                      }))}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                      <input
+                        type="text"
+                        value={exp.company}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          experience: handleArrayChange(prev.experience, index, 'company', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Position</label>
+                      <input
+                        type="text"
+                        value={exp.position}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          experience: handleArrayChange(prev.experience, index, 'position', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                      <input
+                        type="text"
+                        value={exp.startDate}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          experience: handleArrayChange(prev.experience, index, 'startDate', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                      <input
+                        type="text"
+                        value={exp.endDate}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          experience: handleArrayChange(prev.experience, index, 'endDate', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea
+                      value={exp.description}
+                      onChange={(e) => setResumeData(prev => ({
+                        ...prev,
+                        experience: handleArrayChange(prev.experience, index, 'description', e.target.value)
+                      }))}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <button
+                onClick={() => setResumeData(prev => ({
+                  ...prev,
+                  experience: handleAddItem(prev.experience, {
+                    id: Date.now(),
+                    company: '',
+                    position: '',
+                    startDate: '',
+                    endDate: '',
+                    description: ''
+                  })
+                }))}
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Add Experience
+              </button>
+            </div>
+          )}
+
+
+          {activeTab === 'education' && (
+            <div className="space-y-6">
+              {resumeData.education.map((edu, index) => (
+                <div key={edu.id} className="p-4 border border-gray-200 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-medium">Education #{index + 1}</h3>
+                    <button
+                      onClick={() => setResumeData(prev => ({
+                        ...prev,
+                        education: handleRemoveItem(prev.education, index)
+                      }))}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Institution</label>
+                      <input
+                        type="text"
+                        value={edu.institution}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          education: handleArrayChange(prev.education, index, 'institution', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Degree</label>
+                      <input
+                        type="text"
+                        value={edu.degree}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          education: handleArrayChange(prev.education, index, 'degree', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Field of Study</label>
+                      <input
+                        type="text"
+                        value={edu.field}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          education: handleArrayChange(prev.education, index, 'field', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                        <input
+                          type="text"
+                          value={edu.startDate}
+                          onChange={(e) => setResumeData(prev => ({
+                            ...prev,
+                            education: handleArrayChange(prev.education, index, 'startDate', e.target.value)
+                          }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+                        <input
+                          type="text"
+                          value={edu.endDate}
+                          onChange={(e) => setResumeData(prev => ({
+                            ...prev,
+                            education: handleArrayChange(prev.education, index, 'endDate', e.target.value)
+                          }))}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              <button
+                onClick={() => setResumeData(prev => ({
+                  ...prev,
+                  education: handleAddItem(prev.education, {
+                    id: Date.now(),
+                    institution: '',
+                    degree: '',
+                    field: '',
+                    startDate: '',
+                    endDate: ''
+                  })
+                }))}
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Add Education
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'qualifications' && (
+            <div className="space-y-6">
+              {resumeData.qualifications.map((qual, index) => (
+                <div key={qual.id} className="p-4 border border-gray-200 rounded-lg">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="font-medium">Qualification #{index + 1}</h3>
+                    <button
+                      onClick={() => setResumeData(prev => ({
+                        ...prev,
+                        qualifications: handleRemoveItem(prev.qualifications, index)
+                      }))}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      <TrashIcon className="h-5 w-5" />
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                      <input
+                        type="text"
+                        value={qual.name}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          qualifications: handleArrayChange(prev.qualifications, index, 'name', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Issuer</label>
+                      <input
+                        type="text"
+                        value={qual.issuer}
+                        onChange={(e) => setResumeData(prev => ({
+                          ...prev,
+                          qualifications: handleArrayChange(prev.qualifications, index, 'issuer', e.target.value)
+                        }))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Date Obtained</label>
+                    <input
+                      type="text"
+                      value={qual.date}
+                      onChange={(e) => setResumeData(prev => ({
+                        ...prev,
+                        qualifications: handleArrayChange(prev.qualifications, index, 'date', e.target.value)
+                      }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <button
+                onClick={() => setResumeData(prev => ({
+                  ...prev,
+                  qualifications: handleAddItem(prev.qualifications, {
+                    id: Date.now(),
+                    name: '',
+                    issuer: '',
+                    date: ''
+                  })
+                }))}
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Add Qualification
+              </button>
+            </div>
+          )}
+
+          {activeTab === 'skills' && (
+            <div className="space-y-4">
+              {resumeData.skills.map((skill, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={skill}
+                    onChange={(e) => handleSkillChange(index, e.target.value)}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                  <button
+                    onClick={() => handleRemoveSkill(index)}
+                    className="text-red-500 hover:text-red-700"
+                  >
+                    <TrashIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={handleAddSkill}
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                <PlusIcon className="h-5 w-5 mr-2" />
+                Add Skill
+              </button>
+            </div>
+          )}
         </div>
 
         {/* AI Tools Section - Fixed at bottom */}
         <div className="fixed bottom-0 left-0 right-1/2 bg-white border-t border-gray-200 p-4 shadow-lg">
           <h3 className="text-lg font-medium mb-3 text-gray-800">AI Tools</h3>
           <div className="grid grid-cols-4 gap-3">
-            <button 
+            <button
               onClick={analyzeResume}
               className="flex flex-col items-center p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors group"
             >
@@ -328,8 +703,8 @@ export default function ResumeBuilder() {
               </div>
               <span className="text-xs font-medium text-gray-700">AI Analysis</span>
             </button>
-            
-            <button 
+
+            <button
               onClick={checkATS}
               className="flex flex-col items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
             >
@@ -338,9 +713,9 @@ export default function ResumeBuilder() {
               </div>
               <span className="text-xs font-medium text-gray-700">ATS Check</span>
             </button>
-            
-            <button 
-              onClick={() => {}}
+
+            <button
+              onClick={() => { }}
               className="flex flex-col items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
             >
               <div className="p-2 bg-blue-100 rounded-full mb-2 group-hover:bg-blue-200 transition-colors">
@@ -348,9 +723,9 @@ export default function ResumeBuilder() {
               </div>
               <span className="text-xs font-medium text-gray-700">Optimize</span>
             </button>
-            
-            <button 
-              onClick={() => {}}
+
+            <button
+              onClick={() => { }}
               className="flex flex-col items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
             >
               <div className="p-2 bg-purple-100 rounded-full mb-2 group-hover:bg-purple-200 transition-colors">
@@ -375,7 +750,7 @@ export default function ResumeBuilder() {
             </button>
           </div>
         </div>
-        
+
         {/* Live Preview */}
         <div className="bg-white p-8 shadow-lg rounded-lg">
           <ResumePreview data={resumeData} template={selectedTemplate} />
