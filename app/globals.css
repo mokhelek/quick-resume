@@ -1,2 +1,25 @@
 @import "tailwindcss";
 
+@font-face {
+    font-family: 'SpaceGrotesk';
+    src: url('/fonts/SpaceGrotesk-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'RedHatDisplay';
+    src: url('/fonts/RedHatDisplay-VariableFont_wght.ttf');
+}
+
+* {
+    font-family: 'RedHatDisplay', sans-serif;
+}
+
+
+h3,
+h4,
+h5,
+h5,
+h6 {
+    font-family: 'SpaceGrotesk', sans-serif;
+}
+
