@@ -1,48 +1,131 @@
-import React from 'react';
+// ResumeTemplate.tsx
+import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
+import { ResumeData } from '../types/resume';  // Update this import
 
-interface ResumeData {
-  fullName: string;
-  email: string;
-  phone: string;
-  summary: string;
-  experience: {
-    jobTitle: string;
-    company: string;
-    startDate: string;
-    endDate: string;
-    description: string;
-  }[];
-}
 
 interface ResumeTemplateProps {
   data: ResumeData;
+  template: number;
 }
 
-const ResumeTemplate: React.FC<ResumeTemplateProps> = ({ data }) => {
+const styles = StyleSheet.create({
+  page: {
+    padding: 30,
+    fontFamily: 'Helvetica',
+  },
+  header: {
+    marginBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#000',
+    paddingBottom: 10,
+  },
+  section: {
+    marginBottom: 15,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  subtitle: {
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  text: {
+    fontSize: 10,
+  },
+  photo: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+});
+
+export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
+  // Template 1 - Basic
+  if (template === 1) {
+    return (
+      <Document>
+        <Page size="A4" style={styles.page}>
+          <View style={styles.header}>
+            {data.personal.photo && (
+              <Image src={data.personal.photo} style={styles.photo} />
+            )}
+            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
+              {data.personal.name} {data.personal.surname}
+            </Text>
+            <Text style={{ fontSize: 14 }}>{data.personal.jobTitle}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.title}>Contact</Text>
+            <Text style={styles.text}>Phone: {data.personal.phone}</Text>
+            <Text style={styles.text}>Email: {data.personal.email}</Text>
+            {data.personal.linkedin && (
+              <Text style={styles.text}>LinkedIn: {data.personal.linkedin}</Text>
+            )}
+            {data.personal.website && (
+              <Text style={styles.text}>Website: {data.personal.website}</Text>
+            )}
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.title}>Summary</Text>
+            <Text style={styles.text}>{data.personal.summary}</Text>
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.title}>Experience</Text>
+            {data.experience.map((exp) => (
+              <View key={exp.id} style={{ marginBottom: 10 }}>
+                <View style={styles.row}>
+                  <Text style={styles.subtitle}>{exp.position}</Text>
+                  <Text style={styles.text}>
+                    {exp.startDate} - {exp.endDate}
+                  </Text>
+                </View>
+                <Text style={styles.subtitle}>{exp.company}</Text>
+                <Text style={styles.text}>{exp.description}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.title}>Education</Text>
+            {data.education.map((edu) => (
+              <View key={edu.id} style={{ marginBottom: 10 }}>
+                <View style={styles.row}>
+                  <Text style={styles.subtitle}>{edu.degree}</Text>
+                  <Text style={styles.text}>
+                    {edu.startDate} - {edu.endDate}
+                  </Text>
+                </View>
+                <Text style={styles.subtitle}>{edu.institution}</Text>
+                <Text style={styles.text}>{edu.field}</Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={styles.section}>
+            <Text style={styles.title}>Skills</Text>
+            <Text style={styles.text}>{data.skills.join(', ')}</Text>
+          </View>
+        </Page>
+      </Document>
+    );
+  }
+
+  // Add more templates as needed (template === 2, template === 3, etc.)
   return (
-    <div className="max-w-4xl mx-auto bg-white p-8 shadow-md rounded-md text-gray-800">
-      <header className="mb-6">
-        <h1 className="text-3xl font-bold">{data.fullName}</h1>
-        <p className="text-sm">{data.email} | {data.phone}</p>
-      </header>
-
-      <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">Summary</h2>
-        <p className="text-sm">{data.summary}</p>
-      </section>
-
-      <section>
-        <h2 className="text-xl font-semibold mb-2">Experience</h2>
-        {data.experience.map((exp, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="text-md font-bold">{exp.jobTitle} - {exp.company}</h3>
-            <p className="text-sm text-gray-600">{exp.startDate} - {exp.endDate}</p>
-            <p className="text-sm">{exp.description}</p>
-          </div>
-        ))}
-      </section>
-    </div>
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text>Template {template} not implemented yet</Text>
+      </Page>
+    </Document>
   );
 };
-
-export default ResumeTemplate;
