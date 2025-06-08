@@ -1,11 +1,39 @@
 "use client";
-import { useState, useRef } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { useState, useRef, useEffect } from 'react';
 import { SparklesIcon, ArrowDownTrayIcon, EyeIcon, WrenchIcon, ShieldCheckIcon, DocumentCheckIcon } from '@heroicons/react/24/outline';
 import { ResumeTemplate } from '../components/ResumeTemplate';
 import ResumePreview from '../components/ResumePreview';
 import { ResumeData, ExperienceItem, EducationItem } from '../types/resume';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+
+
+function PDFDownloadWrapper({ data, template }: { data: ResumeData; template: number }) {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) return (
+    <button className="flex items-center px-4 py-2.5 bg-indigo-600 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2">
+      <ArrowDownTrayIcon className="h-5 w-5 mr-2 animate-pulse" />
+      <span className="text-sm font-medium">Preparing PDF...</span>
+    </button>
+  );
+
+  return (
+    <PDFDownloadLink
+      document={<ResumeTemplate data={data} template={template} />}
+      fileName={`${data.personal.name}_${data.personal.surname}_Resume.pdf`}
+      className="flex items-center px-3 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg text-sm font-medium tracking-wide transition-all duration-200 shadow-sm hover:shadow-md hover:from-indigo-600 hover:to-indigo-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2"
+    >
+      <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
+      <span>Export as PDF</span>
+    </PDFDownloadLink>
+  );
+}
+
 
 export default function ResumeBuilder() {
   const [activeTab, setActiveTab] = useState<'personal' | 'experience' | 'education' | 'qualifications' | 'skills'>('personal');
@@ -14,14 +42,14 @@ export default function ResumeBuilder() {
   const [resumeData, setResumeData] = useState<ResumeData>({
     personal: {
       photo: null,
-      name: '',
-      surname: '',
+      name: 'Katleho',
+      surname: 'Mokhele',
       jobTitle: 'Software Engineer',
-      phone: '',
-      email: '',
-      linkedin: '',
-      website: '',
-      summary: 'Experienced software engineer with expertise in modern web technologies.'
+      phone: '+27 680 846 1508',
+      email: 'myemail@getyouremail.com',
+      linkedin: 'Cape Town',
+      website: 'https://my-portfolio.com',
+      summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pellentesque sapien non luctus tincidunt. Vivamus vel ligula convallis, tincidunt nisl ut, gravida nulla. Cras quis venenatis purus. Sed auctor, sapien eget sagittis pretium, urna nulla fermentum nisl, nec tincidunt justo ante sed diam. Curabitur viverra diam vitae dictum accumsan. Etiam in venenatis nisi. Etiam nunc metus, viverra eget tincidunt non, elementum at dolor. Pellentesque vel rhoncus augue. .'
     },
     experience: [{
       id: 1,
@@ -29,10 +57,41 @@ export default function ResumeBuilder() {
       position: 'Senior Developer',
       startDate: '2020',
       endDate: 'Present',
-      description: 'Lead development team building innovative solutions.'
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pellentesque sapien non luctus tincidunt. Vivamus vel ligula convallis, tincidunt nisl ut, gravida nulla. Cras quis venenatis purus. Sed auctor, sapien eget sagittis pretium, urna nulla fermentum nisl, nec tincidunt justo ante sed diam. Curabitur viverra diam vitae dictum accumsan. Etiam in venenatis nisi. Etiam nunc metus, viverra eget tincidunt non, elementum at dolor. Pellentesque vel rhoncus augue. '
+    },
+    {
+      id: 2,
+      company: 'Tech Corp',
+      position: 'Senior Developer',
+      startDate: '2020',
+      endDate: 'Present',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pellentesque sapien non luctus tincidunt. Vivamus vel ligula convallis, tincidunt nisl ut, gravida nulla. Cras quis venenatis purus. Sed auctor, sapien eget sagittis pretium, urna nulla fermentum nisl, nec tincidunt justo ante sed diam. Curabitur viverra diam vitae dictum accumsan. Etiam in venenatis nisi. Etiam nunc metus, viverra eget tincidunt non, elementum at dolor. Pellentesque vel rhoncus augue. '
+    },
+    {
+      id: 3,
+      company: 'Tech Corp',
+      position: 'Senior Developer',
+      startDate: '2020',
+      endDate: 'Present',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean pellentesque sapien non luctus tincidunt. Vivamus vel ligula convallis, tincidunt nisl ut, gravida nulla. Cras quis venenatis purus. Sed auctor, sapien eget sagittis pretium, urna nulla fermentum nisl, nec tincidunt justo ante sed diam. Curabitur viverra diam vitae dictum accumsan. Etiam in venenatis nisi. Etiam nunc metus, viverra eget tincidunt non, elementum at dolor. Pellentesque vel rhoncus augue. '
     }],
     education: [{
       id: 1,
+      institution: 'University of Tech',
+      degree: 'B.Sc Computer Science',
+      field: 'Software Engineering',
+      startDate: '2016',
+      endDate: '2020'
+    }, {
+      id: 2,
+      institution: 'University of Tech',
+      degree: 'B.Sc Computer Science',
+      field: 'Software Engineering',
+      startDate: '2016',
+      endDate: '2020'
+    },
+    {
+      id: 3,
       institution: 'University of Tech',
       degree: 'B.Sc Computer Science',
       field: 'Software Engineering',
@@ -44,12 +103,23 @@ export default function ResumeBuilder() {
       name: 'AWS Certified Developer',
       issuer: 'Amazon Web Services',
       date: '2021'
+    }, {
+      id: 2,
+      name: 'AWS Certified Developer',
+      issuer: 'Amazon Web Services',
+      date: '2021'
+    }, {
+      id: 3,
+      name: 'AWS Certified Developer',
+      issuer: 'Amazon Web Services',
+      date: '2021'
     }],
-    skills: ['JavaScript', 'React', 'TypeScript', 'Node.js']
+    skills: ['JavaScript', 'React', 'TypeScript', 'Node.js', 'JavaScript', 'React', 'TypeScript', 'Node.js']
   });
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Add these helper functions
+  // Helper functions
   const handleArrayChange = <T extends {}>(
     array: T[],
     index: number,
@@ -67,6 +137,16 @@ export default function ResumeBuilder() {
 
   const handleRemoveItem = <T extends {}>(array: T[], index: number): T[] => {
     return array.filter((_, i) => i !== index);
+  };
+
+  const handleInputChange = (section: keyof ResumeData, field: string, value: string) => {
+    setResumeData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
   };
 
   const handleSkillChange = (index: number, value: string) => {
@@ -94,50 +174,6 @@ export default function ResumeBuilder() {
     }));
   };
 
-  // Update your tabs to include qualifications
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleInputChange = (section: keyof ResumeData, field: string, value: string) => {
-    setResumeData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value
-      }
-    }));
-  };
-
-  const handleExperienceChange = (index: number, field: keyof ExperienceItem, value: string) => {
-    setResumeData(prev => {
-      const updatedExperience = [...prev.experience];
-      updatedExperience[index] = {
-        ...updatedExperience[index],
-        [field]: value
-      };
-      return {
-        ...prev,
-        experience: updatedExperience
-      };
-    });
-  };
-
-  const handleAddExperience = () => {
-    setResumeData(prev => ({
-      ...prev,
-      experience: [
-        ...prev.experience,
-        {
-          id: Date.now(),
-          company: '',
-          position: '',
-          startDate: '',
-          endDate: '',
-          description: ''
-        }
-      ]
-    }));
-  };
-
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -152,15 +188,8 @@ export default function ResumeBuilder() {
   };
 
   const triggerFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
+    fileInputRef.current?.click();
   };
-
-
-
-
-
 
   const analyzeResume = () => {
     alert('Analyzing your resume with AI...');
@@ -171,11 +200,16 @@ export default function ResumeBuilder() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 w-full" >
       {/* Left Panel - Form */}
-      <div className="w-1/2 p-8 overflow-y-auto bg-white border-r border-gray-200">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">Resume Builder</h1>
+      <div className="w-[47%] p-6 overflow-y-auto bg-white border-r border-gray-200">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center space-x-2">
+            <SparklesIcon className="h-7 w-7 text-indigo-400" />
+            <span className="text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500 font-['Space_Grotesk']">
+              ResuAI
+            </span>
+          </div>
           <div className="flex space-x-3">
             <button
               onClick={() => setShowTemplateSelector(true)}
@@ -184,14 +218,6 @@ export default function ResumeBuilder() {
               <EyeIcon className="h-5 w-5 mr-2" />
               Templates
             </button>
-            <PDFDownloadLink
-              document={<ResumeTemplate data={resumeData} template={selectedTemplate} />}
-              fileName="resume.pdf"
-              className="flex items-center px-4 py-2 bg-indigo-600 text-white hover:bg-indigo-700 rounded-lg transition-colors shadow-md"
-            >
-              <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-              Download PDF
-            </PDFDownloadLink>
           </div>
         </div>
 
@@ -204,8 +230,7 @@ export default function ResumeBuilder() {
                 {[1, 2, 3, 4, 5, 6].map((template) => (
                   <div
                     key={template}
-                    className={`border-2 rounded-lg cursor-pointer transition-all ${selectedTemplate === template ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-gray-300'
-                      }`}
+                    className={`border-2 rounded-lg cursor-pointer transition-all ${selectedTemplate === template ? 'border-indigo-500 ring-2 ring-indigo-200' : 'border-gray-200 hover:border-gray-300'}`}
                     onClick={() => {
                       setSelectedTemplate(template);
                       setShowTemplateSelector(false);
@@ -237,8 +262,8 @@ export default function ResumeBuilder() {
           {(['personal', 'experience', 'education', 'skills', 'qualifications'] as const).map((tab) => (
             <button
               key={tab}
-              className={`px-4 py-2 font-medium transition-colors ${activeTab === tab
-                ? 'text-indigo-600 border-b-2 border-indigo-600'
+              className={`px-4 py-2 font-medium text-sm transition-colors relative ${activeTab === tab
+                ? 'text-indigo-600 after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-indigo-600'
                 : 'text-gray-500 hover:text-gray-700'
                 }`}
               onClick={() => setActiveTab(tab)}
@@ -248,24 +273,26 @@ export default function ResumeBuilder() {
           ))}
         </div>
 
-
-
         {/* Form Sections */}
-        <div className="space-y-8">
+        <div className="space-y-6 pb-16">
+
           {activeTab === 'personal' && (
             <div className="space-y-6">
               <div className="flex items-center space-x-6">
                 <div
-                  className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-200 cursor-pointer relative"
+                  className="w-24 h-24 rounded-full bg-gray-100 overflow-hidden border-2 border-gray-200 cursor-pointer relative group"
                   onClick={triggerFileInput}
                 >
                   {resumeData.personal.photo ? (
                     <img src={resumeData.personal.photo} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-gray-400">
+                    <div className="w-full h-full flex items-center justify-center text-gray-400 group-hover:text-gray-500 transition-colors">
                       <span className="text-sm">Add Photo</span>
                     </div>
                   )}
+                  <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <span className="text-white text-xs font-medium">Change</span>
+                  </div>
                 </div>
                 <input
                   type="file"
@@ -275,13 +302,13 @@ export default function ResumeBuilder() {
                   accept="image/*"
                 />
                 <div>
+                  <p className="text-xs text-gray-500 mb-1">Recommended: Square image, 300x300px</p>
                   <button
                     onClick={triggerFileInput}
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors"
+                    className="px-3 py-1.5 text-sm bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 transition-colors"
                   >
                     {resumeData.personal.photo ? 'Change Photo' : 'Upload Photo'}
                   </button>
-                  <p className="text-xs text-gray-500 mt-1">Recommended: Square image, 300x300px</p>
                 </div>
               </div>
 
@@ -292,7 +319,7 @@ export default function ResumeBuilder() {
                     type="text"
                     value={resumeData.personal.name}
                     onChange={(e) => handleInputChange('personal', 'name', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
                 <div>
@@ -301,7 +328,7 @@ export default function ResumeBuilder() {
                     type="text"
                     value={resumeData.personal.surname}
                     onChange={(e) => handleInputChange('personal', 'surname', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
               </div>
@@ -312,7 +339,7 @@ export default function ResumeBuilder() {
                   type="text"
                   value={resumeData.personal.jobTitle}
                   onChange={(e) => handleInputChange('personal', 'jobTitle', e.target.value)}
-                  className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                 />
               </div>
 
@@ -323,7 +350,7 @@ export default function ResumeBuilder() {
                     type="text"
                     value={resumeData.personal.phone}
                     onChange={(e) => handleInputChange('personal', 'phone', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
                 <div>
@@ -332,7 +359,7 @@ export default function ResumeBuilder() {
                     type="email"
                     value={resumeData.personal.email}
                     onChange={(e) => handleInputChange('personal', 'email', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
               </div>
@@ -344,7 +371,7 @@ export default function ResumeBuilder() {
                     type="text"
                     value={resumeData.personal.linkedin}
                     onChange={(e) => handleInputChange('personal', 'linkedin', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
                 <div>
@@ -353,7 +380,7 @@ export default function ResumeBuilder() {
                     type="url"
                     value={resumeData.personal.website}
                     onChange={(e) => handleInputChange('personal', 'website', e.target.value)}
-                    className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                 </div>
               </div>
@@ -364,30 +391,30 @@ export default function ResumeBuilder() {
                   value={resumeData.personal.summary}
                   onChange={(e) => handleInputChange('personal', 'summary', e.target.value)}
                   rows={4}
-                  className="w-full px-0 py-2 border-0 border-b border-gray-300 focus:border-indigo-500 focus:ring-0 transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                 />
               </div>
             </div>
           )}
 
           {activeTab === 'experience' && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {resumeData.experience.map((exp, index) => (
-                <div key={exp.id} className="p-4 border border-gray-200 rounded-lg">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Experience #{index + 1}</h3>
+                <div key={exp.id} className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-medium text-gray-800">Experience #{index + 1}</h3>
                     <button
                       onClick={() => setResumeData(prev => ({
                         ...prev,
                         experience: handleRemoveItem(prev.experience, index)
                       }))}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <TrashIcon className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
                       <input
@@ -397,7 +424,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           experience: handleArrayChange(prev.experience, index, 'company', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                     <div>
@@ -409,12 +436,12 @@ export default function ResumeBuilder() {
                           ...prev,
                           experience: handleArrayChange(prev.experience, index, 'position', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
                       <input
@@ -424,7 +451,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           experience: handleArrayChange(prev.experience, index, 'startDate', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                     <div>
@@ -436,7 +463,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           experience: handleArrayChange(prev.experience, index, 'endDate', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                   </div>
@@ -450,7 +477,7 @@ export default function ResumeBuilder() {
                         experience: handleArrayChange(prev.experience, index, 'description', e.target.value)
                       }))}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                     />
                   </div>
                 </div>
@@ -468,7 +495,7 @@ export default function ResumeBuilder() {
                     description: ''
                   })
                 }))}
-                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Add Experience
@@ -476,25 +503,24 @@ export default function ResumeBuilder() {
             </div>
           )}
 
-
           {activeTab === 'education' && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {resumeData.education.map((edu, index) => (
-                <div key={edu.id} className="p-4 border border-gray-200 rounded-lg">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Education #{index + 1}</h3>
+                <div key={edu.id} className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-medium text-gray-800">Education #{index + 1}</h3>
                     <button
                       onClick={() => setResumeData(prev => ({
                         ...prev,
                         education: handleRemoveItem(prev.education, index)
                       }))}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <TrashIcon className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Institution</label>
                       <input
@@ -504,7 +530,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           education: handleArrayChange(prev.education, index, 'institution', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                     <div>
@@ -516,12 +542,12 @@ export default function ResumeBuilder() {
                           ...prev,
                           education: handleArrayChange(prev.education, index, 'degree', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Field of Study</label>
                       <input
@@ -531,7 +557,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           education: handleArrayChange(prev.education, index, 'field', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -544,7 +570,7 @@ export default function ResumeBuilder() {
                             ...prev,
                             education: handleArrayChange(prev.education, index, 'startDate', e.target.value)
                           }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                         />
                       </div>
                       <div>
@@ -556,7 +582,7 @@ export default function ResumeBuilder() {
                             ...prev,
                             education: handleArrayChange(prev.education, index, 'endDate', e.target.value)
                           }))}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                         />
                       </div>
                     </div>
@@ -576,7 +602,7 @@ export default function ResumeBuilder() {
                     endDate: ''
                   })
                 }))}
-                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Add Education
@@ -585,23 +611,23 @@ export default function ResumeBuilder() {
           )}
 
           {activeTab === 'qualifications' && (
-            <div className="space-y-6">
+            <div className="space-y-4">
               {resumeData.qualifications.map((qual, index) => (
-                <div key={qual.id} className="p-4 border border-gray-200 rounded-lg">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-medium">Qualification #{index + 1}</h3>
+                <div key={qual.id} className="p-4 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="font-medium text-gray-800">Qualification #{index + 1}</h3>
                     <button
                       onClick={() => setResumeData(prev => ({
                         ...prev,
                         qualifications: handleRemoveItem(prev.qualifications, index)
                       }))}
-                      className="text-red-500 hover:text-red-700"
+                      className="text-gray-400 hover:text-red-500 transition-colors"
                     >
                       <TrashIcon className="h-5 w-5" />
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
                       <input
@@ -611,7 +637,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           qualifications: handleArrayChange(prev.qualifications, index, 'name', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                     <div>
@@ -623,7 +649,7 @@ export default function ResumeBuilder() {
                           ...prev,
                           qualifications: handleArrayChange(prev.qualifications, index, 'issuer', e.target.value)
                         }))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                       />
                     </div>
                   </div>
@@ -637,7 +663,7 @@ export default function ResumeBuilder() {
                         ...prev,
                         qualifications: handleArrayChange(prev.qualifications, index, 'date', e.target.value)
                       }))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                     />
                   </div>
                 </div>
@@ -653,7 +679,7 @@ export default function ResumeBuilder() {
                     date: ''
                   })
                 }))}
-                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Add Qualification
@@ -662,18 +688,18 @@ export default function ResumeBuilder() {
           )}
 
           {activeTab === 'skills' && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               {resumeData.skills.map((skill, index) => (
-                <div key={index} className="flex items-center gap-2">
+                <div key={index} className="flex items-center gap-2 group">
                   <input
                     type="text"
                     value={skill}
                     onChange={(e) => handleSkillChange(index, e.target.value)}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition"
                   />
                   <button
                     onClick={() => handleRemoveSkill(index)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-gray-400 hover:text-red-500 transition-colors"
                   >
                     <TrashIcon className="h-5 w-5" />
                   </button>
@@ -681,67 +707,82 @@ export default function ResumeBuilder() {
               ))}
               <button
                 onClick={handleAddSkill}
-                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+                className="flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
               >
                 <PlusIcon className="h-5 w-5 mr-2" />
                 Add Skill
               </button>
             </div>
           )}
-        </div>
 
-        {/* AI Tools Section - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-1/2 bg-white border-t border-gray-200 p-4 shadow-lg">
-          <h3 className="text-lg font-medium mb-3 text-gray-800">AI Tools</h3>
-          <div className="grid grid-cols-4 gap-3">
+        </div>
+      </div>
+
+
+
+      <div className="w-[6%] max-w-[60px] flex flex-col items-center py-6 bg-gray-50 border-l border-r border-gray-200">
+        <div className="sticky top-1/2 transform -translate-y-1/2 flex flex-col space-y-4 items-center">
+          <div className="relative group">
             <button
               onClick={analyzeResume}
-              className="flex flex-col items-center p-3 bg-indigo-50 hover:bg-indigo-100 rounded-lg transition-colors group"
+              className="p-2.5 bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200"
             >
-              <div className="p-2 bg-indigo-100 rounded-full mb-2 group-hover:bg-indigo-200 transition-colors">
-                <SparklesIcon className="h-5 w-5 text-indigo-600" />
-              </div>
-              <span className="text-xs font-medium text-gray-700">AI Analysis</span>
+              <SparklesIcon className="h-5 w-5 text-indigo-600 group-hover:text-indigo-700" />
             </button>
+            <div className="absolute left-full ml-2 px-2 py-1 bg-indigo-600 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              AI Analysis
+              <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-2 h-2 bg-indigo-600 rotate-45"></div>
+            </div>
+          </div>
 
+          <div className="relative group">
             <button
               onClick={checkATS}
-              className="flex flex-col items-center p-3 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
+              className="p-2.5 bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200"
             >
-              <div className="p-2 bg-green-100 rounded-full mb-2 group-hover:bg-green-200 transition-colors">
-                <DocumentCheckIcon className="h-5 w-5 text-green-600" />
-              </div>
-              <span className="text-xs font-medium text-gray-700">ATS Check</span>
+              <DocumentCheckIcon className="h-5 w-5 text-green-600 group-hover:text-green-700" />
             </button>
+            <div className="absolute left-full ml-2 px-2 py-1 bg-green-600 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              ATS Check
+              <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-2 h-2 bg-green-600 rotate-45"></div>
+            </div>
+          </div>
 
+          <div className="relative group">
             <button
               onClick={() => { }}
-              className="flex flex-col items-center p-3 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
+              className="p-2.5 bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200"
             >
-              <div className="p-2 bg-blue-100 rounded-full mb-2 group-hover:bg-blue-200 transition-colors">
-                <WrenchIcon className="h-5 w-5 text-blue-600" />
-              </div>
-              <span className="text-xs font-medium text-gray-700">Optimize</span>
+              <WrenchIcon className="h-5 w-5 text-blue-600 group-hover:text-blue-700" />
             </button>
+            <div className="absolute left-full ml-2 px-2 py-1 bg-blue-600 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Optimize
+              <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-2 h-2 bg-blue-600 rotate-45"></div>
+            </div>
+          </div>
 
+          <div className="relative group">
             <button
               onClick={() => { }}
-              className="flex flex-col items-center p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
+              className="p-2.5 bg-white rounded-full shadow-md hover:shadow-lg transition-all border border-gray-200"
             >
-              <div className="p-2 bg-purple-100 rounded-full mb-2 group-hover:bg-purple-200 transition-colors">
-                <ShieldCheckIcon className="h-5 w-5 text-purple-600" />
-              </div>
-              <span className="text-xs font-medium text-gray-700">Privacy</span>
+              <ShieldCheckIcon className="h-5 w-5 text-purple-600 group-hover:text-purple-700" />
             </button>
+            <div className="absolute left-full ml-2 px-2 py-1 bg-purple-600 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Privacy
+              <div className="absolute right-full top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-600 rotate-45"></div>
+            </div>
           </div>
         </div>
       </div>
 
+
+
       {/* Right Panel - Preview */}
-      <div className="w-1/2 p-8 overflow-y-auto bg-gray-50">
-        <div className="sticky top-0 bg-gray-50 py-4 mb-6 flex justify-between items-center border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-800">Resume Preview</h2>
-          <div className="flex space-x-2">
+      <div className="w-[47%] pl-3 pr-0 overflow-y-auto bg-gray-50 custom-scroll">
+        <div className="sticky px-3 top-0 bg-gray-50 py-4 mb-6 flex justify-between items-center border-b border-gray-200 z-10">
+          <PDFDownloadWrapper data={resumeData} template={selectedTemplate} />
+          <div className="flex space-x-2 px-3">
             <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md text-sm font-medium">
               Template {selectedTemplate}
             </span>
@@ -751,11 +792,11 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        {/* Live Preview */}
-        <div className="bg-white p-8 shadow-lg rounded-lg">
+        <div className="bg-white p-6 shadow-lg rounded-lg">
           <ResumePreview data={resumeData} template={selectedTemplate} />
         </div>
       </div>
     </div>
+
   );
 }

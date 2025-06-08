@@ -2,12 +2,12 @@
 
 @font-face {
     font-family: 'SpaceGrotesk';
-    src: url('/fonts/SpaceGrotesk-VariableFont_wght.ttf');
+    src: url('/fonts/SpaceGrotesk/SpaceGrotesk-VariableFont_wght.ttf');
 }
 
 @font-face {
     font-family: 'RedHatDisplay';
-    src: url('/fonts/RedHatDisplay-VariableFont_wght.ttf');
+    src: url('/fonts/RedHatDisplay/RedHatDisplay-VariableFont_wght.ttf');
 }
 
 * {

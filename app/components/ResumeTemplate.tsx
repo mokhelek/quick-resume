@@ -1,141 +1,278 @@
-// ResumeTemplate.tsx
-import { Page, Text, View, Document, StyleSheet, Image } from '@react-pdf/renderer';
-import { ResumeData } from '../types/resume';  // Update this import
-
+"use client";
+import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
+import { ResumeData, ExperienceItem, EducationItem, QualificationItem } from '../types/resume';
 
 interface ResumeTemplateProps {
   data: ResumeData;
   template: number;
 }
 
+// Register fonts
+Font.register({
+  family: 'Redhat Display',
+  fonts: [
+    { src: '/fonts/RedHatDisplay/RedHatDisplay-Light.ttf', fontWeight: 300 },
+    { src: '/fonts/RedHatDisplay/RedHatDisplay-Regular.ttf', fontWeight: 400 },
+    { src: '/fonts/RedHatDisplay/RedHatDisplay-Medium.ttf', fontWeight: 500 },
+    { src: '/fonts/RedHatDisplay/RedHatDisplay-SemiBold.ttf', fontWeight: 600 },
+    { src: '/fonts/RedHatDisplay/RedHatDisplay-Bold.ttf', fontWeight: 700 },
+  ],
+});
+
+// Define colors
+const COLORS = {
+  darkBlue: '#213e60',      
+  lightBlue: '#234e80',     
+  darkText: '#213e60',      
+  grayText: '#6b7280',      
+  lightText: '#ffffff',     
+  sectionBorder: '#7793b3'
+};
+
+// Create styles
 const styles = StyleSheet.create({
   page: {
-    padding: 30,
-    fontFamily: 'Helvetica',
-  },
-  header: {
-    marginBottom: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#000',
-    paddingBottom: 10,
-  },
-  section: {
-    marginBottom: 15,
-  },
-  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
+    backgroundColor: '#ffffff',
+    fontSize: 11,
+    lineHeight: 1.3,
+    fontFamily: 'Redhat Display'
   },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
+  leftColumn: {
+    width: '30%',
+    backgroundColor: COLORS.darkBlue,
+    color: COLORS.lightText,
+    padding: 20,
+    paddingTop: 30,
   },
-  subtitle: {
-    fontSize: 12,
-    fontWeight: 'bold',
+  rightColumn: {
+    width: '70%',
+    padding: 14,
+    paddingTop: 28,
   },
-  text: {
-    fontSize: 10,
+  photoContainer: {
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+    borderWidth: 0.01,
+    borderColor: COLORS.lightText,
+    overflow: 'hidden',
+    marginBottom: 20,
+    alignSelf: 'center',
+    display: 'flex',
+    justifyContent: 'center',
   },
   photo: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 92,
+    height: 92,
+  },
+  sectionTitle: {
+    fontSize: 12,
+    fontWeight: 500,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.sectionBorder,
+    paddingBottom: 6,
+    marginBottom: 10,
+    color: COLORS.lightText,
+    marginTop:10
+  },
+  contactText: {
+    fontSize: 10,
+    marginBottom: 5,
+  },
+  educationItem: {
+    marginBottom: 10,
+  },
+  institution: {
+    fontSize: 10,
+    fontWeight: 600,
+    marginBottom: 2,
+  },
+  degree: {
+    fontSize: 9,
+    marginBottom: 2
+  },
+  educationDate: {
+    fontSize: 9,
+  },
+  skillItem: {
+    fontSize: 9,
+    marginBottom: 4,
+    marginLeft: 10,
+  },
+  name: {
+    fontSize: 23,
+    fontWeight: 600,
+    color: COLORS.darkText,
+    textTransform: 'uppercase',
+    marginBottom: 5,
+  },
+  surname: {
+    fontSize: 23,
+    fontWeight: 'normal',
+    color: COLORS.darkText,
+    textTransform: 'uppercase',
+  },
+  jobTitle: {
+    fontSize: 11,
+    color: COLORS.grayText,
+    marginBottom: 30,
+    marginTop: 12
+  },
+  sectionTitleRight: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: COLORS.darkText,
+    borderBottomWidth: 1,
+    borderBottomColor: '#d1d5db',
+    paddingBottom: 6,
+    marginBottom: 10,
+  },
+  summaryText: {
+    fontSize: 9,
+    fontWeight: 300,
+    color: COLORS.darkText,
+    marginBottom: 15,
+  },
+  experienceItem: {
+    marginBottom: 12,
+  },
+  company: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: COLORS.darkText,
+  },
+  position: {
+    fontSize: 9,
+    color: COLORS.lightBlue,
+    marginVertical: 3,
+  },
+  experienceDate: {
+    fontSize: 9,
+    fontWeight: 300,
+    color: COLORS.grayText,
+  },
+  description: {
+    fontSize: 9,
+    fontWeight: 300,
+    color: COLORS.darkText,
+  },
+  qualificationItem: {
+    marginBottom: 10,
+  },
+  qualificationName: {
+    fontSize: 10,
+    fontWeight: 600,
+    color: COLORS.darkText,
+  },
+  qualificationDate: {
+    fontSize:9,
+    fontWeight: 300,
+    color: COLORS.grayText,
+  },
+  qualificationIssuer: {
+    fontSize: 10,
+    color: COLORS.darkText,
   },
 });
 
 export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
-  // Template 1 - Basic
   if (template === 1) {
     return (
       <Document>
         <Page size="A4" style={styles.page}>
-          <View style={styles.header}>
+          {/* Left Column */}
+          <View style={styles.leftColumn}>
             {data.personal.photo && (
-              <Image src={data.personal.photo} style={styles.photo} />
-            )}
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>
-              {data.personal.name} {data.personal.surname}
-            </Text>
-            <Text style={{ fontSize: 14 }}>{data.personal.jobTitle}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.title}>Contact</Text>
-            <Text style={styles.text}>Phone: {data.personal.phone}</Text>
-            <Text style={styles.text}>Email: {data.personal.email}</Text>
-            {data.personal.linkedin && (
-              <Text style={styles.text}>LinkedIn: {data.personal.linkedin}</Text>
-            )}
-            {data.personal.website && (
-              <Text style={styles.text}>Website: {data.personal.website}</Text>
-            )}
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.title}>Summary</Text>
-            <Text style={styles.text}>{data.personal.summary}</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.title}>Experience</Text>
-            {data.experience.map((exp) => (
-              <View key={exp.id} style={{ marginBottom: 10 }}>
-                <View style={styles.row}>
-                  <Text style={styles.subtitle}>{exp.position}</Text>
-                  <Text style={styles.text}>
-                    {exp.startDate} - {exp.endDate}
-                  </Text>
-                </View>
-                <Text style={styles.subtitle}>{exp.company}</Text>
-                <Text style={styles.text}>{exp.description}</Text>
+              <View style={styles.photoContainer}>
+                <Image src={data.personal.photo} style={styles.photo} />
               </View>
-            ))}
-          </View>
+            )}
 
-          <View style={styles.section}>
-            <Text style={styles.title}>Education</Text>
-            {data.education.map((edu) => (
-              <View key={edu.id} style={{ marginBottom: 10 }}>
-                <View style={styles.row}>
-                  <Text style={styles.subtitle}>{edu.degree}</Text>
-                  <Text style={styles.text}>
+            <View>
+              <Text style={styles.sectionTitle}>CONTACT</Text>
+              <Text style={styles.contactText}>{data.personal.phone}</Text>
+              <Text style={styles.contactText}>{data.personal.email}</Text>
+              {data.personal.website && (
+                <Text style={styles.contactText}>{data.personal.website}</Text>
+              )}
+              {data.personal.linkedin && (
+                <Text style={styles.contactText}>{data.personal.linkedin}</Text>
+              )}
+            </View>
+
+            <View>
+              <Text style={styles.sectionTitle}>EDUCATION</Text>
+              {data.education.map((edu: EducationItem) => (
+                <View key={edu.id} style={styles.educationItem}>
+                  <Text style={styles.institution}>{edu.institution}</Text>
+                  <Text style={styles.degree}>{edu.degree}</Text>
+                  <Text style={styles.educationDate}>
                     {edu.startDate} - {edu.endDate}
                   </Text>
                 </View>
-                <Text style={styles.subtitle}>{edu.institution}</Text>
-                <Text style={styles.text}>{edu.field}</Text>
-              </View>
-            ))}
+              ))}
+            </View>
+
+            <View>
+              <Text style={styles.sectionTitle}>SKILLS</Text>
+              {data.skills.map((skill: string, index: number) => (
+                <Text key={index} style={styles.skillItem}>• {skill}</Text>
+              ))}
+            </View>
           </View>
 
-          {data.qualifications.length > 0 && (
-            <View style={styles.section}>
-              <Text style={styles.title}>Qualifications</Text>
-              {data.qualifications.map((qual) => (
-                <View key={qual.id} style={{ marginBottom: 10 }}>
-                  <View style={styles.row}>
-                    <Text style={styles.subtitle}>{qual.name}</Text>
-                    <Text style={styles.text}>{qual.date}</Text>
+          {/* Right Column */}
+          <View style={styles.rightColumn}>
+            <View>
+              <Text style={styles.name}>
+                {data.personal.name.toUpperCase()}{' '}
+                <Text style={styles.surname}>{data.personal.surname.toUpperCase()}</Text>
+              </Text>
+              <Text style={styles.jobTitle}>{data.personal.jobTitle}</Text>
+            </View>
+
+            <View>
+              <Text style={styles.sectionTitleRight}>SUMMARY</Text>
+              <Text style={styles.summaryText}>{data.personal.summary}</Text>
+            </View>
+
+            <View>
+              <Text style={styles.sectionTitleRight}>WORK EXPERIENCE</Text>
+              {data.experience.map((exp: ExperienceItem) => (
+                <View key={exp.id} style={styles.experienceItem}>
+                  <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Text style={styles.company}>{exp.company}</Text>
+                    <Text style={styles.experienceDate}>
+                      {exp.startDate} - {exp.endDate}
+                    </Text>
                   </View>
-                  <Text style={styles.text}>{qual.issuer}</Text>
+                  <Text style={styles.position}>{exp.position}</Text>
+                  <Text style={styles.description}>{exp.description}</Text>
                 </View>
               ))}
             </View>
-          )}
 
-          <View style={styles.section}>
-            <Text style={styles.title}>Skills</Text>
-            <Text style={styles.text}>{data.skills.join(', ')}</Text>
+            {data.qualifications.length > 0 && (
+              <View>
+                <Text style={styles.sectionTitleRight}>QUALIFICATIONS</Text>
+                {data.qualifications.map((qual: QualificationItem) => (
+                  <View key={qual.id} style={styles.qualificationItem}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                      <Text style={styles.qualificationName}>{qual.name}</Text>
+                      <Text style={styles.qualificationDate}>{qual.date}</Text>
+                    </View>
+                    <Text style={styles.qualificationIssuer}>{qual.issuer}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
           </View>
         </Page>
       </Document>
     );
   }
 
-  // Add more templates as needed (template === 2, template === 3, etc.)
   return (
     <Document>
       <Page size="A4" style={styles.page}>
