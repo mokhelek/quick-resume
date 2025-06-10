@@ -1,15 +1,17 @@
-import { ResumeData } from '@/app/types/resume';
+"use client";
+import { ResumeData } from '../types/resume';
 
 interface ResumePreviewProps {
   data: ResumeData;
-  templateId: number;
+  template: number;
 }
 
-export default function ResumePreview({ data, templateId }: ResumePreviewProps) {
-  if (templateId === 1) {
+export default function ResumePreview({ data, template }: ResumePreviewProps) {
+  if (template === 1) {
     return (
       <div className="flex h-full min-h-[800px] text-[13px] leading-tight">
-        {/* Left Column */}
+
+        {/* LEFT COLUMN */}
         <div style={{ backgroundColor: '#213e60' }} className="w-1/3 text-white p-5 flex flex-col items-center text-[12px]">
           {data.personal.photo && (
             <div className="w-24 h-24 rounded-full overflow-hidden border-3 border-white mb-6">
@@ -44,19 +46,20 @@ export default function ResumePreview({ data, templateId }: ResumePreviewProps) 
               ))}
             </ul>
           </div>
+
         </div>
 
-        {/* Right Column */}
+        {/* RIGHT COLUMN */}
         <div className="w-2/3 p-6">
           <div className="mb-6">
             <h1 style={{ textTransform: 'uppercase', color: '#1e416a' }} className="text-[23px] font-bold leading-snug">
-              <span>{data.personal.name}</span> <span className='font-normal'>{data.personal.surname}</span>
+              <span> {data.personal.name} </span>  <span className='font-normal' >{data.personal.surname}</span>
             </h1>
             <p className="text-[13px] text-gray-600">{data.personal.jobTitle}</p>
           </div>
 
           <div className="mb-5">
-            <h2 className="text-[14px] font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-1">Summary</h2>
+            <h2 className="text-[14px] font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-1">Summery</h2>
             <p style={{ fontSize: '11px', fontWeight: '300' }} className="text-gray-700">{data.personal.summary}</p>
           </div>
 
@@ -95,7 +98,7 @@ export default function ResumePreview({ data, templateId }: ResumePreviewProps) 
 
   return (
     <div className="flex items-center justify-center h-full text-gray-400">
-      Template {templateId} preview not implemented yet
+      Template {template} preview not implemented yet
     </div>
   );
 }
