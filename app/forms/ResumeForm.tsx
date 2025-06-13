@@ -88,7 +88,8 @@ export default function ResumeForm({ data, onChange }: { data: ResumeData; onCha
   }, [data, onChange]);
 
   return (
-    <div className="resume-form bg-white p-6 rounded-lg shadow-md">
+    <div className="resume-form bg-white px-5 py-3 rounded-lg shadow-md">
+
       <div className="flex border-b mb-6">
         {(['personal', 'experience', 'education', 'skills', 'qualifications'] as const).map((tab) => (
           <button
@@ -104,6 +105,7 @@ export default function ResumeForm({ data, onChange }: { data: ResumeData; onCha
           </button>
         ))}
       </div>
+
 
       {activeTab === 'personal' && (
         <PersonalInfoForm
