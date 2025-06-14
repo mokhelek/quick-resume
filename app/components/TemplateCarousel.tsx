@@ -3,12 +3,12 @@ import { motion, useMotionValue, PanInfo } from "framer-motion";
 import { useState } from "react";
 
 const templates = [
-  { id: 1, name: "Minimalist", image: "/img/resume1.png" },
-  { id: 2, name: "Executive", image: "/img/resume1.png" },
-  { id: 3, name: "Creative", image: "/img/resume1.png" },
-  { id: 4, name: "Tech", image: "/img/resume1.png" },
-  { id: 5, name: "Modern", image: "/img/resume1.png" },
-  { id: 6, name: "ATS Optimized", image: "/img/resume1.png" },
+  { id: 1, name: "Minimalist", image: "/img/resume-templates/timeline.png" },
+  { id: 4, name: "Tech", image: "/img/resume-templates/single.png" },
+  { id: 2, name: "Executive", image: "/img/resume-templates/creative.png" },
+  { id: 3, name: "Creative", image: "/img/resume-templates/resume1.png" },
+  { id: 5, name: "Modern", image: "/img/resume-templates/contemporary.png" },
+  { id: 6, name: "ATS Optimized", image: "/img/resume-templates/modern2.png" },
 ];
 
 export function TemplatesCarousel() {

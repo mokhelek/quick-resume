@@ -10,126 +10,190 @@ import {
   BoltIcon,
   LightBulbIcon
 } from '@heroicons/react/24/outline';
-import { motion, useAnimation, useInView } from 'framer-motion';
+import { motion, useAnimation, useInView, AnimatePresence } from 'framer-motion';
 import { Navbar } from './components/Navbar';
-
-
 
 export default function LandingPage() {
   // Animation triggers
   const featuresRef = useRef(null);
   const stepsRef = useRef(null);
   const testimonialsRef = useRef(null);
-  
-  const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 });
-  const stepsInView = useInView(stepsRef, { once: true, amount: 0.2 });
-  const testimonialsInView = useInView(testimonialsRef, { once: true, amount: 0.2 });
+
+  const featuresInView = useInView(featuresRef, { once: true, margin: "-100px" });
+  const stepsInView = useInView(stepsRef, { once: true, margin: "-100px" });
+  const testimonialsInView = useInView(testimonialsRef, { once: true, margin: "-100px" });
+
+  // Animation for floating button
+  const floatingAnim = {
+    y: [-7, 7],
+    transition: {
+      y: {
+        repeat: Infinity,
+        repeatType: "reverse",
+        duration: 1.8,
+        ease: "easeInOut"
+      }
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white font-sans">
-      {/* SVG Background Patterns */}
-      <div className="fixed inset-0 overflow-hidden opacity-5 pointer-events-none">
-        <svg className="absolute inset-0 w-full h-full" xmlns="http://www.w3.org/2000/svg">
-          <pattern id="grid-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="20" r="0.5" fill="currentColor" />
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#grid-pattern)" />
-        </svg>
-      </div>
+    <div className="min-h-screen bg-gray-900 text-white font-sans relative overflow-x-hidden">
 
-      {/* Navigation */}
       <Navbar />
 
-      <br /><br />
-      {/* Hero Section - No Entry Animation */}
-      <section className="container mx-auto px-6 py-20 md:py-32 text-center relative z-10">
-        <h1 className="text-4xl md:text-5xl font-medium mb-6 leading-tight font-['Space_Grotesk']">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-            AI-Powered
-          </span>{' '}
-          Resumes That Get You Hired
-        </h1>
-        <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-12">
-          Create professional, tailored resumes in minutes with our intelligent builder. Let AI optimize your content for the jobs you want.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            href="/register"
-            className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium text-lg transition-colors shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/40"
-          >
-            Build Your Resume - It's Free
-          </Link>
-          <Link
-            href="#demo"
-            className="px-8 py-4 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium text-lg transition-colors hover:shadow-lg border border-gray-700"
-          >
-            See How It Works
-          </Link>
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20">
+
+        <div className="absolute inset-0 z-0 opacity-10">
+          <svg className="w-full h-170" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="hero-grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+                <path d="M 80 0 L 0 0 0 80" fill="none" stroke="currentColor" strokeWidth="1.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-grid)" />
+          </svg>
         </div>
 
-        {/* Template Carousel Section */}
-        <div className="relative mt-24">
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-gray-900 to-transparent z-0"></div>
-          <div className="relative z-10">
-            <div className="relative w-full max-w-6xl mx-auto px-4 md:px-8">
-              <TemplatesCarousel />
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-900/60 to-transparent z-0"></div>
+
+
+        {/* Content */}
+        <div className="container mx-auto px-6 text-center relative z-10 mt-15">
+          <h1 className="text-3xl md:text-5xl font-regular mb-6 leading-tight font-['Space_Grotesk']">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+              AI-Powered
+            </span>{' '}
+            Resumes That Get You Hired
+          </h1>
+          <p className="text-md md:text-xl text-gray-300/90 max-w-3xl mx-auto mb-12 font-thin">
+            Create professional, tailored resumes in minutes with our intelligent builder. Let AI optimize your content for the jobs you want.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <motion.div
+                animate={floatingAnim}
+                className="shadow-2xl shadow-indigo-500/30"
+              >
+                <Link
+                  href="/register"
+                  className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-lg font-medium text-lg transition-colors block"
+                >
+                  Build Your Resume - It's Free
+                </Link>
+              </motion.div>
+            </motion.div>
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Link
+                href="#demo"
+                className="px-6 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg font-medium text-lg transition-colors hover:shadow-lg border border-gray-700 block"
+              >
+                See How It Works
+              </Link>
+            </motion.div>
           </div>
+        </div>
+
+        {/* Bottom gradient transition - More visible */}
+
+        <div style={{ marginBottom: '-190px'}} className="absolute bottom-0 left-0 right-0 h-25 bg-gradient-to-t from-gray-900 via-gray-900/90 to-transparent z-10"></div>
+
+      </section>
+
+
+      {/* Template Carousel Section */}
+      <section className="relative z-20 mt-5 pb-32">
+        <div className="relative w-full max-w-6xl mx-auto px-4 md:px-8">
+          <TemplatesCarousel />
         </div>
       </section>
 
       {/* Features Section */}
-      <motion.section 
-        id="features" 
+      <motion.section
+        id="features"
         ref={featuresRef}
-        className="container mx-auto px-6 py-20 relative z-10"
-        initial={{ opacity: 0, y: 40 }}
-        animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative py-20 overflow-hidden"
       >
-        <div className="text-center mb-20">
-          <h2 className="text-3xl md:text-4xl font-medium mb-4 font-['Space_Grotesk']">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-              Powerful Features
-            </span>{' '}
-            For Your Career Success
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Our AI analyzes thousands of successful resumes to help you create the perfect one.
-          </p>
+        {/* Section top gradient - More visible */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-gray-900 via-gray-900/80 to-transparent z-0"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={featuresInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-20"
+          >
+            <h2 className="text-3xl md:text-4xl font-medium mb-4 font-['Space_Grotesk']">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+                Powerful Features
+              </span>{' '}
+              For Your Career Success
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Our AI analyzes thousands of successful resumes to help you create the perfect one.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence>
+              {features.map((feature, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-indigo-400 transition-all hover:-translate-y-1 backdrop-blur-sm"
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  animate={featuresInView ? {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: {
+                      delay: index * 0.1,
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 10
+                    }
+                  } : {}}
+                  whileHover={{
+                    scale: 1.02,
+                    boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.2)"
+                  }}
+                >
+                  <div className="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <feature.icon className="h-6 w-6 text-indigo-400" />
+                  </div>
+                  <h3 className="text-xl font-medium mb-2">{feature.title}</h3>
+                  <p className="text-gray-300">{feature.description}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 hover:border-indigo-400 transition-all hover:-translate-y-1 backdrop-blur-sm"
-              initial={{ opacity: 0, y: 20 }}
-              animate={featuresInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <div className="w-12 h-12 bg-indigo-500/10 rounded-lg flex items-center justify-center mb-4">
-                <feature.icon className="h-6 w-6 text-indigo-400" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">{feature.title}</h3>
-              <p className="text-gray-300">{feature.description}</p>
-            </motion.div>
-          ))}
-        </div>
+        {/* Section bottom gradient - More visible */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent z-0"></div>
       </motion.section>
 
       {/* How It Works Section */}
-      <motion.section 
-        id="how-it-works" 
+      <motion.section
+        id="how-it-works"
         ref={stepsRef}
-        className="py-20 relative overflow-hidden"
-        initial={{ opacity: 0, y: 40 }}
-        animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative py-20 overflow-hidden bg-gradient-to-br from-gray-900/50 to-gray-900/80"
       >
-        {/* Subtle SVG texture */}
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
+        {/* Section top gradient - More visible */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-gray-900 via-gray-900/80 to-transparent z-0"></div>
+
+        {/* Subtle SVG texture - More visible */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
           <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             <pattern id="dots-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
               <circle cx="5" cy="5" r="1" fill="white" />
@@ -137,9 +201,14 @@ export default function LandingPage() {
             <rect width="100%" height="100%" fill="url(#dots-pattern)" />
           </svg>
         </div>
-        
+
         <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={stepsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-4xl font-medium mb-4 font-['Space_Grotesk']">
               Create Your Perfect Resume in{' '}
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
@@ -149,126 +218,191 @@ export default function LandingPage() {
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
               Our streamlined process makes resume building effortless.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {steps.map((step, index) => (
-              <motion.div 
-                key={index} 
-                className="relative"
-                initial={{ opacity: 0, y: 20 }}
-                animate={stepsInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-              >
-                <div className="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-sm font-medium">
-                  {index + 1}
-                </div>
-                <div className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 h-full backdrop-blur-sm hover:border-indigo-400 transition-all">
-                  <h3 className="text-xl font-medium mb-4">{step.title}</h3>
-                  <p className="text-gray-300 mb-4">{step.description}</p>
-                  {step.image && (
-                    <div className="mt-4 bg-gray-900 rounded-lg overflow-hidden">
-                      <img
-                        src={step.image}
-                        alt={step.title}
-                        className="w-full h-auto"
-                      />
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            ))}
+            <AnimatePresence>
+              {steps.map((step, index) => (
+                <motion.div
+                  key={index}
+                  className="relative"
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  animate={stepsInView ? {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: {
+                      delay: index * 0.15,
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 10
+                    }
+                  } : {}}
+                >
+                  <div className="absolute -top-4 -left-4 w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-sm font-medium z-10">
+                    {index + 1}
+                  </div>
+                  <motion.div
+                    className="bg-gray-800/70 border border-gray-700 rounded-xl p-6 h-full backdrop-blur-sm hover:border-indigo-400 transition-all"
+                    whileHover={{
+                      y: -5,
+                      boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.2)"
+                    }}
+                  >
+                    <h3 className="text-xl font-medium mb-4">{step.title}</h3>
+                    <p className="text-gray-300 mb-4">{step.description}</p>
+                    {step.image && (
+                      <div className="mt-4 bg-gray-900 rounded-lg overflow-hidden">
+                        <img
+                          src={step.image}
+                          alt={step.title}
+                          className="w-full h-auto"
+                        />
+                      </div>
+                    )}
+                  </motion.div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </div>
+
+        {/* Section bottom gradient - More visible */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent z-0"></div>
       </motion.section>
 
       {/* Testimonials */}
-      <motion.section 
-        id="testimonials" 
+      <motion.section
+        id="testimonials"
         ref={testimonialsRef}
-        className="container mx-auto px-6 py-20 relative z-10"
-        initial={{ opacity: 0, y: 40 }}
-        animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="relative py-20 overflow-hidden"
       >
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-medium mb-4 font-['Space_Grotesk']">
-            Trusted by{' '}
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-              Job Seekers Worldwide
-            </span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Join thousands who landed their dream jobs with ResuAI.
-          </p>
+        {/* Section top gradient - More visible */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-gray-900 via-gray-900/80 to-transparent z-0"></div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-medium mb-4 font-['Space_Grotesk']">
+              Trusted by{' '}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+                Job Seekers Worldwide
+              </span>
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+              Join thousands who landed their dream jobs with ResuAI.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AnimatePresence>
+              {testimonials.map((testimonial, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-gray-800/70 border border-gray-700 rounded-xl p-6 backdrop-blur-sm hover:border-indigo-400 transition-all"
+                  initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                  animate={testimonialsInView ? {
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    transition: {
+                      delay: index * 0.1,
+                      type: "spring",
+                      stiffness: 100,
+                      damping: 10
+                    }
+                  } : {}}
+                  whileHover={{
+                    y: -5,
+                    boxShadow: "0 10px 25px -5px rgba(99, 102, 241, 0.2)"
+                  }}
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center mr-4">
+                      <span className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
+                        {testimonial.initials}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-medium">{testimonial.name}</h4>
+                      <p className="text-sm text-gray-400">{testimonial.role}</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-300 italic">"{testimonial.quote}"</p>
+                  <div className="mt-4 flex">
+                    {[...Array(5)].map((_, i) => (
+                      <StarIcon
+                        key={i}
+                        className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-600'}`}
+                      />
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={index}
-              className="bg-gray-800/50 border border-gray-700 rounded-xl p-6 backdrop-blur-sm hover:border-indigo-400 transition-all"
-              initial={{ opacity: 0, y: 20 }}
-              animate={testimonialsInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
-              whileHover={{ y: -5 }}
-            >
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-indigo-500/10 rounded-full flex items-center justify-center mr-4">
-                  <span className="text-xl font-medium bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-purple-500">
-                    {testimonial.initials}
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-medium">{testimonial.name}</h4>
-                  <p className="text-sm text-gray-400">{testimonial.role}</p>
-                </div>
-              </div>
-              <p className="text-gray-300 italic">"{testimonial.quote}"</p>
-              <div className="mt-4 flex">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon
-                    key={i}
-                    className={`h-5 w-5 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-600'}`}
-                  />
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {/* Section bottom gradient - More visible */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-gray-900 via-gray-900/80 to-transparent z-0"></div>
       </motion.section>
 
       {/* CTA Section */}
       <section className="relative py-32 overflow-hidden">
-        {/* Subtle gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 to-purple-900/80">
-          {/* SVG texture */}
-          <svg className="absolute inset-0 w-full h-full opacity-10" xmlns="http://www.w3.org/2000/svg">
+        {/* Subtle gradient background - More visible */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/90 to-purple-900/90">
+          {/* SVG texture - More visible */}
+          <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
             <pattern id="circle-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-              <circle cx="20" cy="20" r="1" fill="white" />
+              <circle cx="20" cy="20" r="1.5" fill="white" />
             </pattern>
             <rect width="100%" height="100%" fill="url(#circle-pattern)" />
           </svg>
         </div>
-        
+
         <div className="container mx-auto px-6 text-center relative z-10">
-          <h2 className="text-3xl md:text-4xl font-medium mb-6 font-['Space_Grotesk']">
-            Ready to Transform Your Career?
-          </h2>
-          <p className="text-xl text-indigo-100 max-w-3xl mx-auto mb-8">
-            Join thousands of professionals who boosted their job search with AI-optimized resumes.
-          </p>
-          <Link
-            href="/register"
-            className="inline-block px-8 py-4 bg-white text-indigo-600 hover:bg-gray-100 rounded-lg font-medium text-lg transition-colors shadow-lg hover:shadow-xl"
+          <motion.h2
+            className="text-3xl md:text-4xl font-medium mb-6 font-['Space_Grotesk']"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: "-100px" }}
           >
-            Get Started For Free
-          </Link>
+            Ready to Transform Your Career?
+          </motion.h2>
+          <motion.p
+            className="text-xl text-indigo-100 max-w-3xl mx-auto mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            viewport={{ once: true, margin: "-100px" }}
+          >
+            Join thousands of professionals who boosted their job search with AI-optimized resumes.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            viewport={{ once: true, margin: "-100px" }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link
+              href="/register"
+              className="inline-block px-8 py-4 bg-white text-indigo-600 hover:bg-gray-100 rounded-lg font-medium text-lg transition-colors shadow-lg hover:shadow-xl"
+            >
+              Get Started For Free
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 py-12 relative z-10">
+      <footer className="bg-gray-900 py-12 relative z-10 border-t border-gray-800">
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -443,7 +577,6 @@ const testimonials = [
     rating: 4,
   },
 ];
-
 
 // Simple icons for demo purposes
 function StarIcon(props: React.SVGProps<SVGSVGElement>) {

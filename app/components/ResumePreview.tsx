@@ -1,17 +1,18 @@
-"use client";
-import { ResumeData } from '../types/resume';
+import { ResumeData } from '@/app/types/resume';
+import TimelinePreview from '../Previews/TimelineResumePreview';
+import CreativeBoldPreview from '../Previews/CreativeBoldPreview';
+
 
 interface ResumePreviewProps {
   data: ResumeData;
-  template: number;
+  templateId: number;
 }
 
-export default function ResumePreview({ data, template }: ResumePreviewProps) {
-  if (template === 1) {
+export default function ResumePreview({ data, templateId }: ResumePreviewProps) {
+  if (templateId === 1) {
     return (
       <div className="flex h-full min-h-[800px] text-[13px] leading-tight">
-
-        {/* LEFT COLUMN */}
+        {/* Left Column */}
         <div style={{ backgroundColor: '#213e60' }} className="w-1/3 text-white p-5 flex flex-col items-center text-[12px]">
           {data.personal.photo && (
             <div className="w-24 h-24 rounded-full overflow-hidden border-3 border-white mb-6">
@@ -46,20 +47,19 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
               ))}
             </ul>
           </div>
-
         </div>
 
-        {/* RIGHT COLUMN */}
+        {/* Right Column */}
         <div className="w-2/3 p-6">
           <div className="mb-6">
             <h1 style={{ textTransform: 'uppercase', color: '#1e416a' }} className="text-[23px] font-bold leading-snug">
-              <span> {data.personal.name} </span>  <span className='font-normal' >{data.personal.surname}</span>
+              <span>{data.personal.name}</span> <span className='font-normal'>{data.personal.surname}</span>
             </h1>
             <p className="text-[13px] text-gray-600">{data.personal.jobTitle}</p>
           </div>
 
           <div className="mb-5">
-            <h2 className="text-[14px] font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-1">Summery</h2>
+            <h2 className="text-[14px] font-semibold text-gray-800 border-b border-gray-300 pb-1 mb-1">Summary</h2>
             <p style={{ fontSize: '11px', fontWeight: '300' }} className="text-gray-700">{data.personal.summary}</p>
           </div>
 
@@ -91,14 +91,27 @@ export default function ResumePreview({ data, template }: ResumePreviewProps) {
               ))}
             </div>
           )}
+
         </div>
       </div>
     );
   }
 
+  if (templateId === 2) {
+    return (
+      <TimelinePreview data={data} />
+    )
+  }
+
+  if (templateId === 4) {
+    return (
+      <CreativeBoldPreview data={data} />
+    )
+  }
+
   return (
     <div className="flex items-center justify-center h-full text-gray-400">
-      Template {template} preview not implemented yet
+      Template {templateId} preview not implemented yet
     </div>
   );
 }

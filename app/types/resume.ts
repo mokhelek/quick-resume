@@ -42,3 +42,5 @@ export interface ResumeData {
   qualifications: QualificationItem[];
   skills: string[];
 }
+
+export type PersonalInfoVariant = 'classic' | 'modern' | 'minimal';

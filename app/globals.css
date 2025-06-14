@@ -23,3 +23,6 @@ h6 {
     font-family: 'SpaceGrotesk', sans-serif;
 }
 
+.form-tab-btn{
+    cursor: pointer;
+}
