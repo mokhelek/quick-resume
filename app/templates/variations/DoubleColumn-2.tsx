@@ -1,49 +1,21 @@
-"use client";
-import { Page, Text, View, Document, StyleSheet, Image, Font } from '@react-pdf/renderer';
-import { ResumeData, ExperienceItem, EducationItem, QualificationItem } from '../types/resume';
+import { Document, Page, View, Text, StyleSheet, Image } from '@react-pdf/renderer';
+import { ResumeData } from '@/app/types/resume';
 
-interface ResumeTemplateProps {
-  data: ResumeData;
-  template: number;
-}
-
-// Register fonts
-Font.register({
-  family: 'Redhat Display',
-  fonts: [
-    { src: '/fonts/RedHatDisplay/RedHatDisplay-Light.ttf', fontWeight: 300 },
-    { src: '/fonts/RedHatDisplay/RedHatDisplay-Regular.ttf', fontWeight: 400 },
-    { src: '/fonts/RedHatDisplay/RedHatDisplay-Medium.ttf', fontWeight: 500 },
-    { src: '/fonts/RedHatDisplay/RedHatDisplay-SemiBold.ttf', fontWeight: 600 },
-    { src: '/fonts/RedHatDisplay/RedHatDisplay-Bold.ttf', fontWeight: 700 },
-  ],
-});
-
-// Define colors
-const COLORS = {
-  darkBlue: '#213e60',      
-  lightBlue: '#234e80',     
-  darkText: '#213e60',      
-  grayText: '#6b7280',      
-  lightText: '#ffffff',     
-  sectionBorder: '#7793b3'
-};
-
-// Create styles
 const styles = StyleSheet.create({
   page: {
     flexDirection: 'row',
     backgroundColor: '#ffffff',
     fontSize: 11,
     lineHeight: 1.3,
-    fontFamily: 'Redhat Display'
   },
   leftColumn: {
     width: '30%',
-    backgroundColor: COLORS.darkBlue,
-    color: COLORS.lightText,
+    backgroundColor: '#29532e',
+    color: 'white',
     padding: 20,
     paddingTop: 30,
+    borderRadius: 14,
+    margin: "15px 5px 15px 15px"
   },
   rightColumn: {
     width: '70%',
@@ -55,7 +27,7 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 50,
     borderWidth: 0.01,
-    borderColor: COLORS.lightText,
+    borderColor: 'white',
     overflow: 'hidden',
     marginBottom: 20,
     alignSelf: 'center',
@@ -68,13 +40,13 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: 500,
+    fontWeight: 'medium',
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.sectionBorder,
+    borderBottomColor: '#7793b3',
     paddingBottom: 6,
     marginBottom: 10,
-    color: COLORS.lightText,
-    marginTop:10
+    color: 'white',
+    marginTop: 10
   },
   contactText: {
     fontSize: 10,
@@ -85,7 +57,7 @@ const styles = StyleSheet.create({
   },
   institution: {
     fontSize: 10,
-    fontWeight: 600,
+    fontWeight: 'semibold',
     marginBottom: 2,
   },
   degree: {
@@ -102,27 +74,27 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 23,
-    fontWeight: 600,
-    color: COLORS.darkText,
+    fontWeight: 'bold',
+    color: '#213e60',
     textTransform: 'uppercase',
     marginBottom: 5,
   },
   surname: {
     fontSize: 23,
     fontWeight: 'normal',
-    color: COLORS.darkText,
+    color: '#213e60',
     textTransform: 'uppercase',
   },
   jobTitle: {
     fontSize: 11,
-    color: COLORS.grayText,
+    color: '#6b7280',
     marginBottom: 30,
     marginTop: 12
   },
   sectionTitleRight: {
     fontSize: 12,
-    fontWeight: 600,
-    color: COLORS.darkText,
+    fontWeight: 'semibold',
+    color: '#213e60',
     borderBottomWidth: 1,
     borderBottomColor: '#d1d5db',
     paddingBottom: 6,
@@ -130,8 +102,8 @@ const styles = StyleSheet.create({
   },
   summaryText: {
     fontSize: 9,
-    fontWeight: 300,
-    color: COLORS.darkText,
+    fontWeight: 'light',
+    color: '#213e60',
     marginBottom: 15,
   },
   experienceItem: {
@@ -139,45 +111,44 @@ const styles = StyleSheet.create({
   },
   company: {
     fontSize: 12,
-    fontWeight: 600,
-    color: COLORS.darkText,
+    fontWeight: 'semibold',
+    color: '#213e60',
   },
   position: {
     fontSize: 9,
-    color: COLORS.lightBlue,
+    color: '#234e80',
     marginVertical: 3,
   },
   experienceDate: {
     fontSize: 9,
-    fontWeight: 300,
-    color: COLORS.grayText,
+    fontWeight: 'light',
+    color: '#6b7280',
   },
   description: {
     fontSize: 9,
-    fontWeight: 300,
-    color: COLORS.darkText,
+    fontWeight: 'light',
+    color: '#213e60',
   },
   qualificationItem: {
     marginBottom: 10,
   },
   qualificationName: {
     fontSize: 10,
-    fontWeight: 600,
-    color: COLORS.darkText,
+    fontWeight: 'semibold',
+    color: '#213e60',
   },
   qualificationDate: {
-    fontSize:9,
-    fontWeight: 300,
-    color: COLORS.grayText,
+    fontSize: 9,
+    fontWeight: 'light',
+    color: '#6b7280',
   },
   qualificationIssuer: {
     fontSize: 10,
-    color: COLORS.darkText,
+    color: '#213e60',
   },
 });
 
-export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
-  if (template === 1) {
+export const ProfessionalTemplate2 = ({ data }: { data: ResumeData }) => {
     return (
       <Document>
         <Page size="A4" style={styles.page}>
@@ -203,8 +174,8 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
 
             <View>
               <Text style={styles.sectionTitle}>EDUCATION</Text>
-              {data.education.map((edu: EducationItem) => (
-                <View key={edu.id} style={styles.educationItem}>
+              {data.education.map((edu, index) => (
+                <View key={index} style={styles.educationItem}>
                   <Text style={styles.institution}>{edu.institution}</Text>
                   <Text style={styles.degree}>{edu.degree}</Text>
                   <Text style={styles.educationDate}>
@@ -216,7 +187,7 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
 
             <View>
               <Text style={styles.sectionTitle}>SKILLS</Text>
-              {data.skills.map((skill: string, index: number) => (
+              {data.skills.map((skill, index) => (
                 <Text key={index} style={styles.skillItem}>• {skill}</Text>
               ))}
             </View>
@@ -239,8 +210,8 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
 
             <View>
               <Text style={styles.sectionTitleRight}>WORK EXPERIENCE</Text>
-              {data.experience.map((exp: ExperienceItem) => (
-                <View key={exp.id} style={styles.experienceItem}>
+              {data.experience.map((exp, index) => (
+                <View key={index} style={styles.experienceItem}>
                   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                     <Text style={styles.company}>{exp.company}</Text>
                     <Text style={styles.experienceDate}>
@@ -256,8 +227,8 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
             {data.qualifications.length > 0 && (
               <View>
                 <Text style={styles.sectionTitleRight}>QUALIFICATIONS</Text>
-                {data.qualifications.map((qual: QualificationItem) => (
-                  <View key={qual.id} style={styles.qualificationItem}>
+                {data.qualifications.map((qual, index) => (
+                  <View key={index} style={styles.qualificationItem}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                       <Text style={styles.qualificationName}>{qual.name}</Text>
                       <Text style={styles.qualificationDate}>{qual.date}</Text>
@@ -271,13 +242,4 @@ export const ResumeTemplate = ({ data, template }: ResumeTemplateProps) => {
         </Page>
       </Document>
     );
-  }
-
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Text>Template {template} not implemented yet</Text>
-      </Page>
-    </Document>
-  );
 };

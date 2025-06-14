@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export const ProfessionalTemplate = ({ data, template }: { data: ResumeData; template: number }) => {
-  if (template === 1) {
+export const ProfessionalTemplate = ({ data }: { data: ResumeData }) => {
+  console.log("TEMPLEATE DATA: ", data)
     return (
       <Document>
         <Page size="A4" style={styles.page}>
@@ -241,13 +241,4 @@ export const ProfessionalTemplate = ({ data, template }: { data: ResumeData; tem
         </Page>
       </Document>
     );
-  }
-
-  return (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <Text>Template {template} not implemented yet</Text>
-      </Page>
-    </Document>
-  );
 };
