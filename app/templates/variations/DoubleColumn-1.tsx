@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
 });
 
 export const ProfessionalTemplate = ({ data }: { data: ResumeData }) => {
-  console.log("TEMPLEATE DATA: ", data)
-    return (
+
+  return (
       <Document>
         <Page size="A4" style={styles.page}>
           {/* Left Column */}

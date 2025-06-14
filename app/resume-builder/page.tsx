@@ -397,7 +397,7 @@ export default function ResumeBuilder() {
           </div>
         </div>
 
-        <div className="bg-white p-6 shadow-lg rounded-lg mx-3 mb-6">
+        <div className="bg-white py-6 px-5 shadow-lg rounded-lg mx-3 mb-6">
           {isTransitioning ? (
             <div className="flex items-center justify-center h-96">
               <div className="animate-pulse flex flex-col items-center">
