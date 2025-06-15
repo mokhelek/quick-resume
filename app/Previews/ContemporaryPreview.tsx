@@ -11,7 +11,7 @@ export default function ContemporaryPreview({ data }: ContemporaryPreviewProps) 
             {/* Header with Image */}
             <div className="flex items-start mb-8">
                 {/* Profile Image */}
-                <div className="relative mr-6">
+                <div className="relative mr-4">
                     <div className="w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-lg bg-gray-100">
                         {data.personal.photo && (
                             <img src={data.personal.photo} alt="Profile" className="w-full h-full object-cover" />
@@ -24,7 +24,7 @@ export default function ContemporaryPreview({ data }: ContemporaryPreviewProps) 
 
                 {/* Name and Title */}
                 <div className="flex-1 pt-2">
-                    <h1 className="text-2xl font-semibold text-[#2a4365]">
+                    <h1  className="text-3xl mt-3 font-semibold text-[#2a4365]">
                         {data.personal.name} <span className="text-[#4ecdc4]">{data.personal.surname}</span>
                     </h1>
                     <p className="text-md text-[#ff6b6b]">{data.personal.jobTitle}</p>
