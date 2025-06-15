@@ -7,12 +7,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     padding: 0,
     fontSize: 10,
-    fontFamily: 'Helvetica-Bold',
+    fontFamily: 'Helvetica',
   },
   header: {
     backgroundColor: '#213e60',
     color: '#ffffff',
-    padding: '40 40 30 40',
+    padding: '20 30 15 30',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
@@ -21,15 +21,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontWeight: 'medium',
     textTransform: 'uppercase',
     letterSpacing: 1,
     marginBottom: 4,
   },
   jobTitle: {
-    fontSize: 16,
-    fontWeight: 'semibold',
+    fontSize: 11,
+    fontWeight: 'thin',
     color: '#ffffff',
     textTransform: 'uppercase',
     letterSpacing: 1,
@@ -38,24 +38,25 @@ const styles = StyleSheet.create({
   contactGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: '16 32',
+    gap: '13 20',
   },
   contactItem: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#ffffff',
+    fontWeight: 'thin'
   },
   photoContainer: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 3,
+    width: 90,
+    height: 90,
+    borderRadius: 50,
+    borderWidth: 0.01,
     borderColor: '#ffffff',
     overflow: 'hidden',
     marginLeft: 20,
   },
   photo: {
-    width: '100%',
-    height: '100%',
+    width: 93,
+    height: 93,
   },
   twoColumn: {
     flexDirection: 'row',
@@ -115,30 +116,35 @@ const styles = StyleSheet.create({
   skillsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    justifyContent: 'space-between',
+    gap: 4,
   },
   skillItem: {
+    width: '48%', // Leaves a small gap between columns
     flexDirection: 'row',
     alignItems: 'center',
-    width: '50%',
     marginBottom: 6,
+    flexGrow: 0,
   },
   skillBullet: {
     width: 6,
     height: 6,
     backgroundColor: '#213e60',
     marginRight: 6,
+    flexShrink: 0,
   },
   skillText: {
     fontSize: 9,
     color: '#111827',
+    flexShrink: 1,
+    flexWrap: 'wrap',
   },
   certificationItem: {
     marginBottom: 10,
   },
   certificationName: {
     fontSize: 9,
-    fontWeight: 'bold',
+    fontWeight: 'medium',
     color: '#111827',
     marginBottom: 2,
   },
@@ -147,10 +153,10 @@ const styles = StyleSheet.create({
     color: '#6b7280',
   },
   profileText: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#374151',
     lineHeight: 1.5,
-    marginBottom: 24,
+    marginBottom: 8,
   },
   experienceItem: {
     marginBottom: 20,
@@ -189,9 +195,9 @@ export const CreativeBoldTemplate = ({ data }: { data: ResumeData }) => {
         {/* Header with Contact Info and Photo */}
         <View style={styles.header}>
           <View style={styles.headerContent}>
-            <Text style={styles.name}>{data.personal.name}</Text>
+            <Text style={styles.name}>{data.personal.name} {data.personal.surname} </Text>
             <Text style={styles.jobTitle}>{data.personal.jobTitle}</Text>
-            
+
             <View style={styles.contactGrid}>
               <Text style={styles.contactItem}>{data.personal.phone}</Text>
               <Text style={styles.contactItem}>{data.personal.email}</Text>
@@ -203,7 +209,7 @@ export const CreativeBoldTemplate = ({ data }: { data: ResumeData }) => {
               )}
             </View>
           </View>
-          
+
           {data.personal.photo && (
             <View style={styles.photoContainer}>
               <Image src={data.personal.photo} style={styles.photo} />
@@ -261,7 +267,13 @@ export const CreativeBoldTemplate = ({ data }: { data: ResumeData }) => {
                 {data.skills.map((skill, index) => (
                   <View key={index} style={styles.skillItem}>
                     <View style={styles.skillBullet} />
-                    <Text style={styles.skillText}>{skill}</Text>
+                    <Text style={styles.skillText}>
+                      {skill.length > 20 ? (
+                        <Text style={{ width: '100%' }}>{skill}</Text> // Force full width for long skills
+                      ) : (
+                        skill
+                      )}
+                    </Text>
                   </View>
                 ))}
               </View>

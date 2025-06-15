@@ -1,7 +1,8 @@
 import { ResumeData } from '@/app/types/resume';
 import TimelinePreview from '../Previews/TimelineResumePreview';
 import CreativeBoldPreview from '../Previews/CreativeBoldPreview';
-
+import ContemporaryPreview from '../Previews/ContemporaryPreview';
+import SingleColumnPreview from '../Previews/SingleColumnPreview';
 
 interface ResumePreviewProps {
   data: ResumeData;
@@ -102,10 +103,21 @@ export default function ResumePreview({ data, templateId }: ResumePreviewProps) 
       <TimelinePreview data={data} />
     )
   }
+    if (templateId === 3) {
+    return (
+      <SingleColumnPreview data={data} />
+    )
+  }
 
   if (templateId === 4) {
     return (
       <CreativeBoldPreview data={data} />
+    )
+  }
+
+  if (templateId === 5) {
+    return (
+      <ContemporaryPreview data={data} />
     )
   }
 
