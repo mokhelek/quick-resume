@@ -371,7 +371,7 @@ export default function ResumeBuilder() {
 
       {/* Right Panel - Preview */}
       <div className="w-[47%] pl-3 pr-0 overflow-y-auto bg-gray-50">
-        <div className="sticky px-4 top-0 bg-gray-50 py-3 mb-6 flex justify-between items-center border-b border-gray-200 z-10 backdrop-blur-sm ">
+        <div className="sticky px-4 top-0 bg-gray-50 py-3 mb-6 flex justify-between items-center border-b border-gray-200 z-50 backdrop-blur-sm ">
           <div className="flex items-center space-x-2">
             <EyeIcon className="h-5 w-5 text-indigo-500" />
             <h2 className="text-sm font-medium text-indigo-800">Live Preview</h2>
